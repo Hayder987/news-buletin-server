@@ -26,6 +26,13 @@ async function run() {
     const database = client.db("newsDB");
     const userCollection = database.collection("newsAdmin");
     const commentCollection = database.collection("comment");
+    const usersCollection = database.collection("users");
+
+    app.post('/users', async(req, res)=>{
+      const body = req.body;
+      const result = await usersCollection.insertOne(body)
+      res.send(result)
+    })
 
    app.post('/posts', async(req, res)=>{
        const post = req.body;
