@@ -74,6 +74,41 @@ async function run() {
        const result = await userCollection.deleteOne(filter)
        res.send(result)  
    })
+
+
+   app.post('/comments', async(req, res)=>{
+      const comment = req.body;
+      const result = await commentCollection.insertOne(comment)
+      res.send(result);
+   })
+
+   app.get('/comments', async(req, res)=>{
+      const comments = commentCollection.find()
+      const result = await comments.toArray()
+      res.send(result)
+   })
+
+   app.delete('/comment/:id', async(req, res)=>{
+       const id = req.params.id;
+       const filter  = {_id: new ObjectId(id)}
+       const result = await commentCollection.deleteOne(filter)
+       res.send(result);
+   })
+
+   app.put('/comment/:id', async(req, res)=>{
+    const id = req.params.id;
+    const comment = req.body;
+    
+    const filter = {_id: new ObjectId(id)}
+    const options = { upsert: true };
+    const updateDoc = {
+      $set: {
+        message: comment.message
+      },
+    };
+    const result = await commentCollection.updateOne(filter, updateDoc, options);
+    res.send(result)
+   })
    
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
