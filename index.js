@@ -34,6 +34,40 @@ async function run() {
       res.send(result)
     })
 
+    app.put('/user', async(req, res)=>{
+      const body = req.body;
+      const email = body.email;
+      const filter = {email};
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+           name:body.name,
+           imgPath: body.imgPath,
+           email: body.email,
+           createAt:body.createAt,
+           lastLogIn: body.lastLogIn,
+           signMethod: body.signMethod
+        },
+      };
+      const result = await usersCollection.updateOne(filter, updateDoc, options)
+      res.send(result)
+    })
+
+    app.patch ('/user', async(req, res)=>{
+      const body = req.body;
+      const email = body.email;
+      const filter = {email}
+      const updateDoc = {
+        $set: {
+          lastLogIn : body.lastLogIn
+        },
+      };
+      const result = await usersCollection.updateOne(filter, updateDoc)
+      res.send(result);
+    })
+
+
+
    app.post('/posts', async(req, res)=>{
        const post = req.body;
        const result = await userCollection.insertOne(post)
